@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { fetchDoctors } from '../api/doctors';
 
+const fallback = '/default-doctor.png';
+
 const BookingPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -22,10 +24,20 @@ const BookingPage = () => {
         <h1 className="text-2xl">Book Appointment</h1>
       </header>
       <main className="p-6">
-        <div className="max-w-xl mx-auto bg-white rounded-lg shadow p-6">
-            
+        <div className="max-w-xl mx-auto bg-white rounded-lg shadow p-6 text-center">
+
+          {/* Doctor Image */}
+          <img
+            src={doctor.photo}
+            alt={doctor.name}
+            className="w-24 h-24 rounded-full object-cover border mx-auto mb-4"
+            onError={e => { e.target.onerror = null; e.target.src = fallback; }}
+          />
+
           <h2 className="text-xl font-semibold mb-2">{doctor.name}</h2>
-          <p className="text-gray-600 mb-4">{doctor.specialities.map(s => s.name).join(', ')}</p>
+          <p className="text-gray-600 mb-4">
+            {doctor.specialities.map(s => s.name).join(', ')}
+          </p>
           <p className="mb-2"><strong>Clinic:</strong> {doctor.clinic.name}</p>
           <p className="mb-4 text-gray-600">
             <strong>Location:</strong> {doctor.clinic.address.locality}, {doctor.clinic.address.city}
@@ -36,20 +48,17 @@ const BookingPage = () => {
             <strong>Experience:</strong> {doctor.experience} years
           </p>
           <p className="text-sm text-gray-600">
-            <strong>Qualification:</strong> {doctor.qualification}
+            <strong>Qualification:</strong> {doctor.specialities.map(s => s.name).join(', ')}
           </p>
 
           {/* Buttons */}
-          <div className="mt-6 flex gap-4">
-            <button
-              className="px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-            >
+          <div className="mt-6 flex gap-4 justify-center">
+            <button className="px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
               Confirm & Continue
             </button>
 
-            {/* Back button */}
             <button
-              onClick={() => navigate(-1)} // Go back to the previous page
+              onClick={() => navigate(-1)}
               className="px-6 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400"
             >
               Back
